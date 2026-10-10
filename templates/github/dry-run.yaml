@@ -34,8 +34,7 @@ jobs:
           RENOVATE_ONBOARDING: "false"
           RENOVATE_REQUIRE_CONFIG: optional
           LOG_LEVEL: debug
-          LOG_FORMAT: json
-          LOG_FILE: ${{ github.workspace }}/renovate-log.jsonl
+          LOG_FILE: /tmp/renovate-log.jsonl
           LOG_FILE_LEVEL: debug
 
       - name: Summarize
@@ -46,14 +45,14 @@ jobs:
             echo
             echo "Managers and files:"
             echo '```'
-            jq -r 'select(.msg=="packageFiles with updates") | .config | to_entries[] | "\(.key): \(.value|length) files"' renovate-log.jsonl
+            jq -r 'select(.msg=="packageFiles with updates") | .config | to_entries[] | "\(.key): \(.value|length) files"' /tmp/renovate-log.jsonl
             echo '```'
-            echo "Distinct branches Renovate would handle: $(jq -r 'select(.msg|test("^branchExists=")) | .branch' renovate-log.jsonl | sort -u | wc -l)"
+            echo "Distinct branches Renovate would handle: $(jq -r 'select(.msg|test("^branchExists=")) | .branch' /tmp/renovate-log.jsonl | sort -u | wc -l)"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: renovate-log
-          path: renovate-log.jsonl
+          path: /tmp/renovate-log.jsonl
           retention-days: 7
