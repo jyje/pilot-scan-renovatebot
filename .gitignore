@@ -1,0 +1,4 @@
+# raw Renovate debug logs may contain repo metadata; keep local only
+out/
+*.pem
+.env

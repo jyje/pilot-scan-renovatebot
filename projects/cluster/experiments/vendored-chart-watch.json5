@@ -1,0 +1,27 @@
+{
+  // Experiment: detect new upstream versions of vendored charts without touching helm/** by hand.
+  // Reads the top-level name/version of helm/<group>/<chart>-<version>/Chart.yaml and asks the
+  // Helm repo (registryUrl per chart, see helm/README.md "Group and provider" table).
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:recommended"],
+  ignorePresets: [":ignoreModulesAndTests"], // simulation only, drop in a real repo config
+  enabledManagers: ["custom.regex"],
+  customManagers: [
+    {
+      customType: "regex",
+      managerFilePatterns: ["/^helm/[^/]+/[^/]+/Chart\\.yaml$/"],
+      matchStringsStrategy: "combination",
+      matchStrings: [
+        "(?m)^name:\\s*(?<depName>[\\w.-]+)\\s*$",
+        "(?m)^version:\\s*(?<currentValue>\\S+)\\s*$",
+      ],
+      datasourceTemplate: "helm",
+    },
+  ],
+  packageRules: [
+    { matchPackageNames: ["cert-manager"], registryUrls: ["https://charts.jetstack.io"] },
+    { matchPackageNames: ["ingress-nginx"], registryUrls: ["https://kubernetes.github.io/ingress-nginx"] },
+    { matchPackageNames: ["argo-cd"], registryUrls: ["https://argoproj.github.io/argo-helm"] },
+    { matchPackageNames: ["sealed-secrets"], registryUrls: ["https://bitnami-labs.github.io/sealed-secrets"] },
+  ],
+}

@@ -1,0 +1,28 @@
+# Self-hosted Renovate (container image) for a GitLab project.
+#
+# CI/CD variables (Settings > CI/CD > Variables, masked):
+#   RENOVATE_TOKEN     project access token, role Developer, scopes: api, write_repository
+#   GITHUB_COM_TOKEN   optional read-only GitHub token, only so Renovate can fetch release notes
+#
+# Run it from a pipeline schedule (Build > Pipeline schedules), or start a pipeline by hand with
+# RENOVATE_DRY_RUN=full to see what would happen without creating branches or merge requests.
+
+stages: [renovate]
+
+renovate:
+  stage: renovate
+  image:
+    name: ghcr.io/renovatebot/renovate:44.149.2
+    entrypoint: [""]
+  variables:
+    RENOVATE_PLATFORM: gitlab
+    RENOVATE_ENDPOINT: $CI_API_V4_URL
+    RENOVATE_REPOSITORIES: $CI_PROJECT_PATH
+    RENOVATE_ONBOARDING: "false"
+    RENOVATE_REQUIRE_CONFIG: required
+    LOG_LEVEL: debug
+  script:
+    - renovate
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "web" || $CI_PIPELINE_SOURCE == "api"
