@@ -63,9 +63,12 @@ Details per repo: [projects/](projects/).
 - Setting `ci_pipeline_variables_minimum_override_role` for the sandbox and starting a pipeline by hand were
   refused by the session's permission check, so that route was dropped.
 
+### Published
+
+- This repo was created as public `jyje/pilot-scan-renovatebot` and pushed (owner approved).
+
 ### Not done yet
 
 - GitHub App, secrets, and committing workflow + config to the three repos (owner involvement; see
   [02-github-action.md](02-github-action.md)).
-- GitHub repo for this pilot (`jyje/pilot-scan-renovatebot`) is not created or pushed.
 - GitLab CI run on shared runners (account verification).
