@@ -67,6 +67,17 @@ Details per repo: [projects/](projects/).
 
 - This repo was created as public `jyje/pilot-scan-renovatebot` and pushed (owner approved).
 
+### GitHub-hosted dry run (blocked)
+
+- Wrote `templates/github/dry-run.yaml`: a secret-free workflow that dry-runs Renovate against a public repo with the
+  default `GITHUB_TOKEN`. It is lint-clean (actionlint), but not run: pushing anything under `.github/workflows/`
+  was rejected because the local `gh` token has no `workflow` scope ("refusing to allow an OAuth App to create or
+  update workflow ... without `workflow` scope"). Widening the token needs the owner to approve it in the browser.
+  The same permission ("Workflows: read and write") is why the GitHub App in
+  [02-github-action.md](02-github-action.md) needs that permission too.
+- While writing it, one action SHA (`upload-artifact`) had been typed from memory and was wrong; it was replaced with
+  the SHA looked up from the release tag.
+
 ### Not done yet
 
 - GitHub App, secrets, and committing workflow + config to the three repos (owner involvement; see

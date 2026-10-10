@@ -4,6 +4,18 @@
 > dry-run, but the GitHub App does not exist yet and nothing was committed to the scanned repos. Steps marked
 > "owner" need the account owner.
 
+## Before anything else: token scope
+
+Files under `.github/workflows/` can only be pushed with a token that has the `workflow` scope. The `gh` login used
+here does not, so the pushes were rejected. To widen it (owner, browser approval):
+
+```bash
+gh auth refresh -h github.com -s workflow
+```
+
+Then `templates/github/dry-run.yaml` can be copied to `.github/workflows/` of this repo and started with
+`gh workflow run dry-run.yaml -f repo=jyje/mungchilog`. It needs no secret and writes nothing to the scanned repo.
+
 ## Design
 
 Per-repo workflow (option A) is the recommendation. Each repo carries `.github/workflows/renovate.yaml` and

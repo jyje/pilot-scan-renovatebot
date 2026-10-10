@@ -1,0 +1,59 @@
+name: 🔎 renovate dry run
+
+# Dry-runs Renovate (container image) against a public repo from a GitHub-hosted runner.
+# Needs no secret: the default GITHUB_TOKEN can read public repos, and RENOVATE_DRY_RUN=full
+# writes nothing. This proves the container/action path; opening real PRs needs the GitHub App
+# described in docs/02-github-action.md.
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "Public repo to scan"
+        type: choice
+        options: ["jyje/mungchilog", "jyje/pifanctl", "jyje/cluster"]
+        default: "jyje/mungchilog"
+
+permissions:
+  contents: read
+
+jobs:
+  dry-run:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: renovatebot/github-action@230ce922b08968d0a4f6f70f295601daff09ef1d # v46.3.7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          renovate-version: 44.149.2
+        env:
+          RENOVATE_REPOSITORIES: ${{ inputs.repo }}
+          RENOVATE_DRY_RUN: full
+          RENOVATE_ONBOARDING: "false"
+          RENOVATE_REQUIRE_CONFIG: optional
+          LOG_LEVEL: debug
+          LOG_FORMAT: json
+          LOG_FILE: ${{ github.workspace }}/renovate-log.jsonl
+          LOG_FILE_LEVEL: debug
+
+      - name: Summarize
+        if: always()
+        run: |
+          {
+            echo "### Renovate dry run: ${{ inputs.repo }}"
+            echo
+            echo "Managers and files:"
+            echo '```'
+            jq -r 'select(.msg=="packageFiles with updates") | .config | to_entries[] | "\(.key): \(.value|length) files"' renovate-log.jsonl
+            echo '```'
+            echo "Distinct branches Renovate would handle: $(jq -r 'select(.msg|test("^branchExists=")) | .branch' renovate-log.jsonl | sort -u | wc -l)"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: renovate-log
+          path: renovate-log.jsonl
+          retention-days: 7
