@@ -3,9 +3,9 @@ name: 🤖 renovate
 # Self-hosted Renovate (container image) that updates the repository it lives in.
 # The repo's own renovate.json5 is the repository config; nothing here is global config.
 #
-# Secrets (repository level):
-#   RENOVATE_APP_ID           GitHub App id
-#   RENOVATE_APP_PRIVATE_KEY  GitHub App private key (PEM)
+# Same naming as jyje/claude-docker uses for jyje-bot:
+#   vars.APP_CLIENT_ID        GitHub App client id (not a secret)
+#   secrets.APP_PRIVATE_KEY   GitHub App private key (PEM)
 # A GitHub App token is used instead of GITHUB_TOKEN so that the PRs Renovate opens
 # trigger the normal CI workflows (events created by GITHUB_TOKEN do not).
 
@@ -37,8 +37,8 @@ jobs:
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
         with:
-          app-id: ${{ secrets.RENOVATE_APP_ID }}
-          private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - uses: renovatebot/github-action@230ce922b08968d0a4f6f70f295601daff09ef1d # v46.3.7
         with:

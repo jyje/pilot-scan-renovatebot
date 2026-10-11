@@ -48,15 +48,35 @@ touching the others.
 
 B is not built; this repo only keeps the dry-run script for it.
 
+## Which GitHub App: the existing `jyje-bot` or a new one
+
+`jyje-bot` already exists (a **private** GitHub App, so its permissions are visible only to the owner). What the
+logs of `jyje/claude-docker` show, and what they do not:
+
+| Known | Not known |
+|---|---|
+| Installed on `jyje/claude-docker`; a token with `contents: write` and `pull-requests: read` is issued | The full permission list of the App |
+| Convention: variable `APP_CLIENT_ID`, secret `APP_PRIVATE_KEY` (`actions/create-github-app-token`, `client-id` input) | Which other repos it is installed on |
+| Secret values cannot be read back from GitHub, by anyone | Whether it has Issues, Workflows, Checks, Commit statuses write and Dependabot alerts read |
+
+Renovate needs: Contents, Pull requests, Issues, Workflows, Checks, Commit statuses (all read and write), and
+Dependabot alerts, Metadata (read). Both options need the owner:
+
+| | Reuse `jyje-bot` | New dedicated App |
+|---|---|---|
+| Owner work | Add the missing permissions in the App settings, add the 3 repos to the installation, supply the private key again (generate a new key in the App settings) for 3 repos | Create the App, install it on the 3 repos, store its key in 3 repos |
+| Blast radius | Adding `Workflows: write` and `Issues: write` also applies to `claude-docker` and every other repo it is installed on | Limited to the 3 repos |
+| Names | Same `APP_CLIENT_ID` / `APP_PRIVATE_KEY` | Same names, so the template is identical either way |
+
+Recommendation: a new App, for the narrower blast radius. The template works with either.
+
 ## Steps
 
-1. **(owner) Create a GitHub App** under *Settings > Developer settings > GitHub Apps*, not public, no webhook.
-   Repository permissions: Contents (R/W), Pull requests (R/W), Issues (R/W, for the Dependency Dashboard),
-   Workflows (R/W, to edit files under `.github/workflows`), Checks (R/W), Commit statuses (R/W),
-   Dependabot alerts (R), Metadata (R). Install it on `jyje/cluster`, `jyje/pifanctl`, `jyje/mungchilog` only.
-2. **(owner) Add two repository secrets** to each repo: `RENOVATE_APP_ID` and `RENOVATE_APP_PRIVATE_KEY` (the PEM
-   downloaded in step 1). Put the key in via `gh secret set RENOVATE_APP_PRIVATE_KEY < key.pem` or the web UI.
-   It should not be pasted into chat or committed.
+1. **(owner) Create or choose the GitHub App** (settings above), not public, no webhook. Install it on
+   `jyje/cluster`, `jyje/pifanctl`, `jyje/mungchilog` only.
+2. **(owner) Per repo, add one variable and one secret**: variable `APP_CLIENT_ID` (the App's client id) and secret
+   `APP_PRIVATE_KEY` (the PEM). Put the key in via `gh secret set APP_PRIVATE_KEY --repo jyje/<repo> < key.pem` or
+   the web UI. It should not be pasted into chat or committed.
 3. Commit `templates/github/renovate.yaml` to `.github/workflows/` and the repo's file from `projects/<repo>/` to
    the repo root as `renovate.json5`. Do it by pull request, not by direct push.
 4. Run the workflow by hand (`workflow_dispatch`, dry run `full`). Read the log for the same managers and branches
