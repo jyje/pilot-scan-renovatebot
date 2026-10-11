@@ -1,6 +1,7 @@
 # GitHub Actions
 
-> **Status: the container path is verified on GitHub-hosted runners; the real rollout is not done.**
+> **Status: the container path is verified on GitHub-hosted runners; draft PRs with the workflow and config are open
+> in all three repos; they wait for the App setup below.**
 > [`dry-run.yaml`](../templates/github/dry-run.yaml) ran green for all three repos from this repo (no secret, default
 > `GITHUB_TOKEN`, `RENOVATE_DRY_RUN=full`). The GitHub App does not exist yet and nothing was committed to the
 > scanned repos. Steps marked "owner" need the account owner.
@@ -85,6 +86,20 @@ Recommendation: a new App, for the narrower blast radius. The template works wit
    Sunday-night schedule on.
 6. Remove the overlapping Dependabot *version update* entries in `cluster` (`github-actions`) and `pifanctl`
    (`pip`, `docker`, `github-actions`) in a separate PR. Keep Dependabot security alerts.
+
+## Draft PRs (opened 2026-10-11, not merged)
+
+Owner decision: reuse `jyje-bot`. The PRs only add `.github/workflows/renovate.y(a)ml` and `renovate.json5` and say in
+their description what must exist before merging.
+
+| Repo | PR | Notes |
+|---|---|---|
+| mungchilog | [#112](https://github.com/jyje/mungchilog/pull/112) | base `dev`; workflow named `renovate.yml` and runner `ubuntu-26.04` to match the repo |
+| pifanctl | [#85](https://github.com/jyje/pifanctl/pull/85) | CI `Workflows` (actionlint) and `Version bump` pass, as predicted from `check_version_bump.py` |
+| cluster | [#166](https://github.com/jyje/cluster/pull/166) | `main` is protected |
+
+Still to do by the owner before merging: install `jyje-bot` on the three repos, check it has the permissions listed
+above, set the variable `APP_CLIENT_ID` and the secret `APP_PRIVATE_KEY` in each repo.
 
 Order of rollout: `mungchilog` (simplest, no Dependabot to remove) → `pifanctl` → `cluster`.
 

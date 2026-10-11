@@ -43,7 +43,7 @@ What matters most per repo:
 | Workflow template (lint-clean with actionlint) | Done |
 | GitLab: sandbox project, CI job on shared runners, MRs created by Renovate | Done |
 | GitHub: container run on hosted runners (dry run, all three repos) | Done |
-| GitHub: App, secrets, workflow + config in the three repos | Prepared, waits for the App |
+| GitHub: draft PRs with workflow + config in the three repos | Open ([#112](https://github.com/jyje/mungchilog/pull/112), [#85](https://github.com/jyje/pifanctl/pull/85), [#166](https://github.com/jyje/cluster/pull/166)); waits for `jyje-bot` install and secrets |
 
 ## Documents
 

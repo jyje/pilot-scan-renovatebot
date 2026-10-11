@@ -88,7 +88,17 @@ Details per repo: [projects/](projects/).
   succeeded on a shared runner in 57 s and opened MR `!2` (Renovate image tag 44.149.2 → 44.149.3 in
   `.gitlab-ci.yml`). Details: [03-gitlab.md](03-gitlab.md).
 
+### GitHub rollout PRs
+
+- Owner chose to reuse `jyje-bot`. Opened draft PRs adding the workflow and `renovate.json5`: mungchilog #112 (base
+  `dev`), pifanctl #85, cluster #166. None merged.
+- pifanctl CI on the PR: actionlint (`Workflows`) and `Version bump` pass, which matches the reading of
+  `check_version_bump.py`.
+- `rm -rf` with a variable path was blocked by a safety check while preparing the clones; rewritten without the
+  removal.
+
 ### Not done yet
 
-- GitHub App, secrets, and committing workflow + config to the three repos (owner involvement; see
-  [02-github-action.md](02-github-action.md)). The container path itself is already verified on hosted runners.
+- Installing `jyje-bot` on the three repos, confirming its permissions, setting `APP_CLIENT_ID` and `APP_PRIVATE_KEY`
+  (owner only; see [02-github-action.md](02-github-action.md)), then merging the PRs and running the workflow once as a
+  dry run. The container path itself is already verified on hosted runners.
