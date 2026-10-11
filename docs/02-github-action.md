@@ -120,9 +120,17 @@ follow-up commit when the central run was chosen.
 |---|---|---|
 | mungchilog | [#112](https://github.com/jyje/mungchilog/pull/112) | base `dev` |
 | pifanctl | [#85](https://github.com/jyje/pifanctl/pull/85) | CI `Workflows` (actionlint) and `Version bump` passed on the first version, as predicted from `check_version_bump.py` |
-| cluster | [#166](https://github.com/jyje/cluster/pull/166) | `main` is protected |
+| cluster | [#166](https://github.com/jyje/cluster/pull/166) | **merged 2026-10-12**; dashboard issue [#167](https://github.com/jyje/cluster/issues/167) created by the first real run |
 
 Order of rollout: `mungchilog` (simplest, no Dependabot to remove) → `pifanctl` → `cluster`.
+
+## Permissions seen in practice (jyje-bot)
+
+| Permission | Evidence |
+|---|---|
+| Metadata, Contents read, Issues write | Real run created the dashboard issue in cluster |
+| Dependabot alerts read | **Missing**: `Cannot access vulnerability alerts` although alerts are enabled (API 204). Owner: add it in the App settings and approve the update on the installation |
+| Pull requests, Workflows, Checks, Commit statuses write | Not yet exercised: the only candidate branch is gated by the dashboard |
 
 ## Why a GitHub App and not `GITHUB_TOKEN`
 

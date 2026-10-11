@@ -43,7 +43,21 @@ The `clusters/r4spi/apps/*.yaml` Applications point at paths inside this repo (`
 | No config | 117 | 239 |
 | Recommended config | 1 (a major, waiting for approval) | 3 |
 
-Effectively no PR until someone ticks the dashboard box, and then one PR for the Actions bump.
+Effectively no PR until someone ticks the dashboard box. What that one branch (`renovate/major-actions`) really is,
+seen in the first real run (2026-10-12): the `github-actions` manager also treats the runner label as a dependency,
+so it is the runner image bump `ubuntu 24.04 → 26.04` (and `24.04-arm → 26.04-arm`) in `microk8s-track.yaml` and
+`probe.yaml`, not an action version. `mungchilog` and `pifanctl` already use `ubuntu-26.04`. Gating it behind the
+dashboard is the right default for a runner OS change.
+
+## Rollout status
+
+- Config PR [#166](https://github.com/jyje/cluster/pull/166) merged on 2026-10-12 (squash `0fc1165`, CI green).
+- Central dry run: only `.github/workflows/microk8s-track.yaml`, `probe.yaml` and `docs/diagrams/requirements.txt`
+  scanned, 56 s, one branch pending approval, no errors.
+- Real run (`dry-run: off`, 57 s): `jyje-bot` created Dependency Dashboard issue
+  [#167](https://github.com/jyje/cluster/issues/167). No PR opened, as predicted.
+- Warning on every run: `Cannot access vulnerability alerts`. Dependabot alerts are enabled on all three repos
+  (the API answers 204), so the cause is the App: it lacks the **Dependabot alerts: read** permission.
 
 ## Dependabot
 

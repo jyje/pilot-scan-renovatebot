@@ -128,6 +128,18 @@ Details per repo: [projects/](projects/).
 - This does not yet prove the App's permissions: the vulnerability-alerts check and the write calls come after the
   config is read. They are exercised by the next dry run, after the first config PR is merged.
 
+### cluster rolled out (2026-10-12, at the owner's request)
+
+- Merged config PR cluster#166 (squash `0fc1165`; checks green, only `renovate.json5` changed, no review rule).
+- Central dry run: cluster scanned with 3 files and 1 branch gated; pifanctl and mungchilog still skipped.
+- Real run: Dependency Dashboard issue cluster#167 created by `jyje-bot` (Issues write works). No PR.
+- The gated branch is the runner image bump `ubuntu 24.04 → 26.04`, which the `github-actions` manager reads as a
+  dependency. I had described it as "an Actions major" earlier; corrected in `docs/projects/cluster.md`.
+- `Cannot access vulnerability alerts`: Dependabot alerts are enabled (204) on all three repos, so the App is missing
+  the **Dependabot alerts: read** permission. Owner action: App settings > Permissions & events > Repository
+  permissions, then approve the permission update on the installation.
+
 ### Not done yet
 
-- Merging the three config PRs (owner), then running the central workflow as a dry run again and then for real. The container path itself is already verified on hosted runners.
+- Merging the pifanctl and mungchilog config PRs (owner), then running the central workflow for real again.
+- `jyje-bot` needs Dependabot alerts: read (owner). The container path itself is already verified on hosted runners.
