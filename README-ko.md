@@ -41,7 +41,7 @@ gitlab.com에서의 같은 구성을 담았습니다.
 | 세 레포의 로컬 컨테이너 드라이런 | 완료 |
 | 권장 설정 (`renovate-config-validator` 통과) | 완료 |
 | 워크플로 템플릿 (actionlint 통과) | 완료 |
-| GitLab: 샘플 프로젝트, Renovate가 만든 MR | 완료 (공용 러너 CI 실행은 계정 인증 문제로 보류) |
+| GitLab: 샘플 프로젝트, 공용 러너 CI 잡, Renovate가 만든 MR | 완료 |
 | GitHub: 호스티드 러너에서 컨테이너 실행 (세 레포 드라이런) | 완료 |
 | GitHub: App, secret, 세 레포에 워크플로와 설정 반영 | 준비됨, App 생성 대기 |
 

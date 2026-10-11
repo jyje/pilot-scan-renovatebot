@@ -12,22 +12,27 @@ Same idea as GitHub, tested on a sandbox project `jyje/pilot-renovate-sample` (p
 | Project access token on the **Free** plan (`api`, `write_repository`, role Developer, with an expiry date) | Works; the token value is shown once at creation |
 | Store the token as a masked CI/CD variable `RENOVATE_TOKEN` | Works |
 | Renovate container with `platform=gitlab` against the project | Works. Reads the repo's `renovate.json5`; found pip, Docker, Helm values, pyenv and `.gitlab-ci.yml` (manager `gitlabci`) |
-| Real run | Opened MR `!1 🤖 ci(deps): Update python` (`typer`, `matplotlib`) and the Dependency Dashboard issue. `kubernetes 37` is listed under "Pending Approval" |
+| Real run (local container) | Opened MR `!1 🤖 ci(deps): Update python` (`typer`, `matplotlib`) and the Dependency Dashboard issue. `kubernetes 37` is listed under "Pending Approval" |
 
 The `commitMessagePrefix` gives the same `🤖 ci(deps): ...` titles as on GitHub, so the `git-commit-helper` bot rule
 carries over unchanged.
 
-## What did not (yet)
+## CI on gitlab.com shared runners
 
-- **Pipelines on gitlab.com shared runners are blocked until the account is verified.** Both push pipelines failed
-  immediately with "The pipeline failed due to the user not being verified". Identity verification (phone or card)
-  is something only the account owner can do, so the CI job was **not run on GitLab CI**. Everything above ran from a
-  local container against the GitLab API instead; the job in the template is the same `renovate` command.
-- Alternatives that avoid the verification, none tried: register a project runner on your own machine, or keep
-  running Renovate from outside GitLab (a GitHub Actions schedule can scan a GitLab project too, with
-  `platform=gitlab`).
-- The free-plan compute-minute quota was not visible through the API (`shared_runners_minutes_limit` is `null`), so
-  it is not recorded here.
+After the owner finished identity verification, a pipeline started with `glab ci run` ran the `renovate` job on a
+shared runner (`saas-linux-small-amd64`): **success in 57 s**. It used the repo's `renovate.json5` and the masked
+`RENOVATE_TOKEN` variable, and it opened MR `!2 🤖 ci(deps): Update ghcr.io/renovatebot/renovate Docker tag to v44.149.3`,
+the CI file's own pinned Renovate image (manager `gitlabci`). So Renovate keeps the job that runs it up to date.
+Note: that run was a real run, not a dry run, because `RENOVATE_DRY_RUN` could not be set as a variable in this
+session. In a real project, put `RENOVATE_DRY_RUN=full` in the schedule's variables for the first run.
+
+Before verification, both push pipelines had failed immediately with "The pipeline failed due to the user not being
+verified". Identity verification (phone or card) is something only the account owner can do. Other ways around it,
+not needed in the end: a project runner on your own machine, or running Renovate from GitHub Actions against the
+GitLab project with `platform=gitlab`.
+
+The free-plan compute-minute quota is not visible through the API (`shared_runners_minutes_limit` is `null`), so it is
+not recorded here. One scan of this small project used about 1 minute.
 
 ## Differences from GitHub worth knowing
 

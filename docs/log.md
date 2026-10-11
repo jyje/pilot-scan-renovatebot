@@ -82,8 +82,13 @@ Details per repo: [projects/](projects/).
   laptop), cluster 1118 s (no repo config). Warning seen: `Cannot access vulnerability alerts` (the default token
   has no Dependabot alerts access).
 
+### GitLab CI (after account verification)
+
+- Owner finished identity verification. `glab ci run --branch main` created pipeline 2935178275; the `renovate` job
+  succeeded on a shared runner in 57 s and opened MR `!2` (Renovate image tag 44.149.2 → 44.149.3 in
+  `.gitlab-ci.yml`). Details: [03-gitlab.md](03-gitlab.md).
+
 ### Not done yet
 
 - GitHub App, secrets, and committing workflow + config to the three repos (owner involvement; see
   [02-github-action.md](02-github-action.md)). The container path itself is already verified on hosted runners.
-- GitLab CI run on shared runners (account verification).
