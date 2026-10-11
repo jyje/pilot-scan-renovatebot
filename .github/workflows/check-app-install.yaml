@@ -2,6 +2,7 @@ name: 🔑 check app install
 
 # Tries to mint a jyje-bot token for each target repo on its own and reports which ones fail.
 # "Not Found" from create-github-app-token means the App is not installed on that repo.
+# claude-docker is the control: the App is known to be installed there.
 # Writes nothing anywhere.
 
 on:
@@ -16,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        repo: [cluster, pifanctl, mungchilog]
+        repo: [claude-docker, cluster, pifanctl, mungchilog]
     steps:
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
