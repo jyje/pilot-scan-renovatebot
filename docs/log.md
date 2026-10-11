@@ -118,7 +118,16 @@ Details per repo: [projects/](projects/).
 - Fix is on the owner's side: Settings > Applications > Installed GitHub Apps > jyje-bot > Configure > Repository
   access, add the three repos.
 
+### jyje-bot installed, central dry run (2026-10-12)
+
+- Owner added `cluster`, `pifanctl`, `mungchilog` to the `jyje-bot` installation. `🔑 check app install`: all four
+  repos (with the control) succeed.
+- Central workflow `🤖 renovate`, `dry-run: full`: green in 61 s. The token was created for the three repos, all three
+  were reached ("Repository started") and each was skipped with `config file not found`
+  (`RENOVATE_REQUIRE_CONFIG=required`), because the config PRs are not merged yet. No warnings or errors.
+- This does not yet prove the App's permissions: the vulnerability-alerts check and the write calls come after the
+  config is read. They are exercised by the next dry run, after the first config PR is merged.
+
 ### Not done yet
 
-- Storing `APP_PRIVATE_KEY` in this repo (owner, from a terminal), merging the three config PRs, and running the
-  central workflow as a dry run and then for real. The container path itself is already verified on hosted runners.
+- Merging the three config PRs (owner), then running the central workflow as a dry run again and then for real. The container path itself is already verified on hosted runners.

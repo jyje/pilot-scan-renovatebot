@@ -43,7 +43,7 @@ What matters most per repo:
 | Workflow template (lint-clean with actionlint) | Done |
 | GitLab: sandbox project, CI job on shared runners, MRs created by Renovate | Done |
 | GitHub: container run on hosted runners (dry run, all three repos) | Done |
-| GitHub: central workflow in this repo, config PRs in the three repos | Workflow ready; draft PRs [#112](https://github.com/jyje/mungchilog/pull/112), [#85](https://github.com/jyje/pifanctl/pull/85), [#166](https://github.com/jyje/cluster/pull/166) open; waits for `APP_PRIVATE_KEY` |
+| GitHub: central workflow in this repo, config PRs in the three repos | `jyje-bot` installed, central dry run green; draft PRs [#112](https://github.com/jyje/mungchilog/pull/112), [#85](https://github.com/jyje/pifanctl/pull/85), [#166](https://github.com/jyje/cluster/pull/166) open; waits for the config PRs to be merged |
 
 ## Documents
 

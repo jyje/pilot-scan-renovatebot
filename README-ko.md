@@ -43,7 +43,7 @@ gitlab.com에서의 같은 구성을 담았습니다.
 | 워크플로 템플릿 (actionlint 통과) | 완료 |
 | GitLab: 샘플 프로젝트, 공용 러너 CI 잡, Renovate가 만든 MR | 완료 |
 | GitHub: 호스티드 러너에서 컨테이너 실행 (세 레포 드라이런) | 완료 |
-| GitHub: 이 레포의 중앙 워크플로, 세 레포의 설정 PR | 워크플로 준비됨. 초안 PR [#112](https://github.com/jyje/mungchilog/pull/112), [#85](https://github.com/jyje/pifanctl/pull/85), [#166](https://github.com/jyje/cluster/pull/166) 열림. `APP_PRIVATE_KEY` 대기 |
+| GitHub: 이 레포의 중앙 워크플로, 세 레포의 설정 PR | `jyje-bot` 설치됨, 중앙 드라이런 성공. 초안 PR [#112](https://github.com/jyje/mungchilog/pull/112), [#85](https://github.com/jyje/pifanctl/pull/85), [#166](https://github.com/jyje/cluster/pull/166) 열림. 설정 PR 머지 대기 |
 
 ## 문서
 

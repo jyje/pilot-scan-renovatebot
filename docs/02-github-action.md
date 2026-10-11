@@ -2,7 +2,8 @@
 
 > **Status: decided on the central run (owner's choice, 2026-10-11).** The container path is verified on GitHub-hosted
 > runners. The central workflow is in this repo; draft PRs with only `renovate.json5` are open in the three repos.
-> What is left needs the owner: store `APP_PRIVATE_KEY` here and merge the config PRs.
+> `jyje-bot` is installed on the three repos and the central dry run is green (61 s; every repo is skipped until its
+> config PR is merged). What is left needs the owner: merge the config PRs, one at a time.
 
 ## Before anything else: token scope
 
@@ -96,9 +97,9 @@ Renovate app is the "just install it" route, outside this pilot's container/CLI 
 
 ## Steps (central run)
 
-1. **(owner)** Install `jyje-bot` on `jyje/cluster`, `jyje/pifanctl`, `jyje/mungchilog`: Settings > Applications > Installed
-   GitHub Apps > jyje-bot > Configure > Repository access. Check it with the workflow `🔑 check app install` (reports
-   per repo; `claude-docker` is the control). On 2026-10-11 all three still returned `Not Found`, i.e. not installed.
+1. **(owner, done 2026-10-12)** Install `jyje-bot` on `jyje/cluster`, `jyje/pifanctl`, `jyje/mungchilog`: Settings > Applications >
+   Installed GitHub Apps > jyje-bot > Configure > Repository access. Check it with the workflow `🔑 check app install`
+   (reports per repo; `claude-docker` is the control). On 2026-10-11 all three returned `Not Found`; on 2026-10-12 all succeed.
 2. **(owner)** Check that `jyje-bot` has the permissions listed above (Issues, Workflows, Checks, Commit statuses
    write; Dependabot alerts read). Anything missing shows up as a failed step or a warning in the dry run.
 3. **(owner)** Store the private key once, in this repo, from a terminal so it does not pass through chat:
