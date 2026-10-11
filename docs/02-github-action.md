@@ -71,6 +71,31 @@ Dependabot alerts, Metadata (read). Both options need the owner:
 
 Recommendation: a new App, for the narrower blast radius. The template works with either.
 
+## Central run: one secret instead of three
+
+Installing a GitHub App only lets it *access* a repo; a workflow still needs the private key to sign in as the App.
+The key can be stored once if Renovate runs from one place. [`.github/workflows/renovate.yaml`](../.github/workflows/renovate.yaml)
+in this repo (copy in `templates/github/renovate-central.yaml`) does that:
+
+- `actions/create-github-app-token` with `owner: jyje` and `repositories: cluster, pifanctl, mungchilog` returns a
+  token limited to those three repos.
+- `RENOVATE_REPOSITORIES` lists the same three; `RENOVATE_REQUIRE_CONFIG=required` skips a repo until its
+  `renovate.json5` is merged.
+- Only the secret `APP_PRIVATE_KEY` is needed, and only in this repo. The client id is not a secret and is written in
+  the workflow.
+- Manual runs default to `dry-run: full`; the Sunday-night schedule creates PRs.
+
+| | Per repo | Central |
+|---|---|---|
+| Secrets to register | 3 | 1 |
+| Per repo needs | workflow + `renovate.json5` | `renovate.json5` only |
+| Run log | each repo | this repo |
+| Weak point | | one failure stops all three |
+
+A personal account has no account-wide Actions secrets, so "install once, use everywhere" without storing the key
+somewhere is not possible; an organization secret would do it but means moving the repos into an org. Mend's hosted
+Renovate app is the "just install it" route, outside this pilot's container/CLI goal.
+
 ## Steps
 
 1. **(owner) Create or choose the GitHub App** (settings above), not public, no webhook. Install it on
