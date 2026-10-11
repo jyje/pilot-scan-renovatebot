@@ -107,6 +107,17 @@ Details per repo: [projects/](projects/).
 - Removed the per-repo workflow from the three PR branches with a follow-up commit each, retitled the PRs
   ("add Renovate config") and rewrote their descriptions. Central workflow: `.github/workflows/renovate.yaml`.
 
+### Central run, first attempts (2026-10-11)
+
+- Owner stored `APP_PRIVATE_KEY` (and an `APP_ID`) in this repo. The central workflow's dry run failed at
+  `create-github-app-token` with `Not Found - get-a-repository-installation-for-the-authenticated-app`.
+- A key or client-id problem would give 401 "Bad credentials", not 404, so I added `.github/workflows/check-app-install.yaml`:
+  it mints a token for each repo separately. With the control repo `claude-docker` (App known to be installed) it
+  **succeeds**; `cluster`, `pifanctl` and `mungchilog` all return `Not Found`. Conclusion: key and client id are
+  fine, and `jyje-bot` is **not installed** on the three target repos (it may be installed on other repos only).
+- Fix is on the owner's side: Settings > Applications > Installed GitHub Apps > jyje-bot > Configure > Repository
+  access, add the three repos.
+
 ### Not done yet
 
 - Storing `APP_PRIVATE_KEY` in this repo (owner, from a terminal), merging the three config PRs, and running the

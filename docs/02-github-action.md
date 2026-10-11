@@ -96,8 +96,9 @@ Renovate app is the "just install it" route, outside this pilot's container/CLI 
 
 ## Steps (central run)
 
-1. **(owner, done)** `jyje-bot` is installed on `jyje/cluster`, `jyje/pifanctl`, `jyje/mungchilog`. GitHub offers no API to
-   confirm this for a private App; the first dry run does: token creation fails for a repo that is not installed.
+1. **(owner)** Install `jyje-bot` on `jyje/cluster`, `jyje/pifanctl`, `jyje/mungchilog`: Settings > Applications > Installed
+   GitHub Apps > jyje-bot > Configure > Repository access. Check it with the workflow `🔑 check app install` (reports
+   per repo; `claude-docker` is the control). On 2026-10-11 all three still returned `Not Found`, i.e. not installed.
 2. **(owner)** Check that `jyje-bot` has the permissions listed above (Issues, Workflows, Checks, Commit statuses
    write; Dependabot alerts read). Anything missing shows up as a failed step or a warning in the dry run.
 3. **(owner)** Store the private key once, in this repo, from a terminal so it does not pass through chat:
