@@ -1,0 +1,34 @@
+name: 🔑 check app install
+
+# Tries to mint a jyje-bot token for each target repo on its own and reports which ones fail.
+# "Not Found" from create-github-app-token means the App is not installed on that repo.
+# Writes nothing anywhere.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        repo: [cluster, pifanctl, mungchilog]
+    steps:
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app-token
+        with:
+          client-id: Iv23liPUAdp1yJeUO57X # jyje-bot
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: jyje
+          repositories: ${{ matrix.repo }}
+          permission-metadata: read
+
+      - name: Show what the token can reach
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          gh api "repos/jyje/${{ matrix.repo }}" --jq '"installed and reachable: \(.full_name) (default branch \(.default_branch))"'
