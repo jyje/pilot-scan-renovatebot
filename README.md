@@ -42,7 +42,8 @@ What matters most per repo:
 | Recommended configs (validated with `renovate-config-validator`) | Done |
 | Workflow template (lint-clean with actionlint) | Done |
 | GitLab: sandbox project, MR created by Renovate | Done (CI run on GitLab shared runners blocked by account verification) |
-| GitHub: App, secrets, workflow + config in the three repos | Prepared, not executed |
+| GitHub: container run on hosted runners (dry run, all three repos) | Done |
+| GitHub: App, secrets, workflow + config in the three repos | Prepared, waits for the App |
 
 ## Documents
 

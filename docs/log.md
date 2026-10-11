@@ -67,19 +67,23 @@ Details per repo: [projects/](projects/).
 
 - This repo was created as public `jyje/pilot-scan-renovatebot` and pushed (owner approved).
 
-### GitHub-hosted dry run (blocked)
+### GitHub-hosted dry run
 
-- Wrote `templates/github/dry-run.yaml`: a secret-free workflow that dry-runs Renovate against a public repo with the
-  default `GITHUB_TOKEN`. It is lint-clean (actionlint), but not run: pushing anything under `.github/workflows/`
-  was rejected because the local `gh` token has no `workflow` scope ("refusing to allow an OAuth App to create or
-  update workflow ... without `workflow` scope"). Widening the token needs the owner to approve it in the browser.
-  The same permission ("Workflows: read and write") is why the GitHub App in
-  [02-github-action.md](02-github-action.md) needs that permission too.
-- While writing it, one action SHA (`upload-artifact`) had been typed from memory and was wrong; it was replaced with
-  the SHA looked up from the release tag.
+- Wrote the secret-free `templates/github/dry-run.yaml` (default `GITHUB_TOKEN`, `RENOVATE_DRY_RUN=full`).
+- First push was rejected: the local `gh` token had no `workflow` scope. The owner approved
+  `gh auth refresh -s workflow` in the browser; the push then worked.
+- One action SHA (`upload-artifact`) had been typed from memory and was wrong; replaced with the SHA looked up from
+  the release tag.
+- Run 1 failed in the summary step: the log file was written inside the container and never reached the runner.
+  Run 2 failed the same way: `renovatebot/github-action` forwards only `RENOVATE_*`/`LOG_LEVEL`-style variables and
+  mounts nothing. Fix: `additional-env-list` for `LOG_FILE`, `docker-volumes` for a log directory, and a writable
+  host directory. Run 3 succeeded.
+- All three repos then ran green on GitHub-hosted runners: pifanctl 62 s, mungchilog 141 s (42 branches, same as the
+  laptop), cluster 1118 s (no repo config). Warning seen: `Cannot access vulnerability alerts` (the default token
+  has no Dependabot alerts access).
 
 ### Not done yet
 
 - GitHub App, secrets, and committing workflow + config to the three repos (owner involvement; see
-  [02-github-action.md](02-github-action.md)).
+  [02-github-action.md](02-github-action.md)). The container path itself is already verified on hosted runners.
 - GitLab CI run on shared runners (account verification).

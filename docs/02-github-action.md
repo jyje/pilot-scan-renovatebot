@@ -1,20 +1,36 @@
 # GitHub Actions
 
-> **Status: prepared, not yet executed.** The workflow is linted and the three repo configs are validated and
-> dry-run, but the GitHub App does not exist yet and nothing was committed to the scanned repos. Steps marked
-> "owner" need the account owner.
+> **Status: the container path is verified on GitHub-hosted runners; the real rollout is not done.**
+> [`dry-run.yaml`](../templates/github/dry-run.yaml) ran green for all three repos from this repo (no secret, default
+> `GITHUB_TOKEN`, `RENOVATE_DRY_RUN=full`). The GitHub App does not exist yet and nothing was committed to the
+> scanned repos. Steps marked "owner" need the account owner.
 
 ## Before anything else: token scope
 
-Files under `.github/workflows/` can only be pushed with a token that has the `workflow` scope. The `gh` login used
-here does not, so the pushes were rejected. To widen it (owner, browser approval):
+Files under `.github/workflows/` can only be pushed with a token that has the `workflow` scope. The `gh` login
+did not have it, so the first push was rejected. The owner approved `gh auth refresh -h github.com -s workflow` in
+the browser (device code), after which the push worked.
 
-```bash
-gh auth refresh -h github.com -s workflow
-```
+## Verification run (no App needed)
 
-Then `templates/github/dry-run.yaml` can be copied to `.github/workflows/` of this repo and started with
-`gh workflow run dry-run.yaml -f repo=jyje/mungchilog`. It needs no secret and writes nothing to the scanned repo.
+`gh workflow run dry-run.yaml -f repo=jyje/mungchilog` (also `pifanctl`, `cluster`). Results on `ubuntu-24.04`,
+Renovate `44.149.2`, no repo config:
+
+| Repo | Duration | Managers found | Branches wanted |
+|---|---|---|---|
+| mungchilog | 141 s | npm, dockerfile, docker-compose, github-actions, helm-values | 42 (same as the laptop run) |
+| pifanctl | 62 s | as in the laptop run | |
+| cluster | 1118 s (18.6 min) | as in the laptop run | |
+
+The only warning: `Cannot access vulnerability alerts`. The default `GITHUB_TOKEN` cannot read Dependabot alerts,
+which is why the App below gets "Dependabot alerts: read".
+
+Three details of `renovatebot/github-action` that cost two failed runs:
+
+- It forwards only `RENOVATE_*`, `LOG_LEVEL`, proxy variables and the like to the container. Anything else
+  (`LOG_FILE`) must be listed in `additional-env-list`.
+- It mounts nothing. A log file the container writes is lost unless a directory is mounted with `docker-volumes`.
+- The container runs as a non-root user, so the host directory must be writable (`install -d -m 777`).
 
 ## Design
 
@@ -73,5 +89,5 @@ App token does. A fine-grained PAT would also work but is tied to the owner's ac
 
 ## Cost
 
-Public repos get free GitHub-hosted minutes. A scan took about 1 minute for `cluster` with `ignorePaths` and under
-5 minutes for the others on a cold laptop container; the hosted runner time is of the same order.
+Public repos get free GitHub-hosted minutes. Measured above: 1 to 19 minutes per scan without a repo config. With
+the recommended `ignorePaths`, `cluster` took about 1 minute on the laptop, so the weekly scheduled run is cheap.
