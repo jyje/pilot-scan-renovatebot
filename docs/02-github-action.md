@@ -1,10 +1,8 @@
 # GitHub Actions
 
-> **Status: the container path is verified on GitHub-hosted runners; draft PRs with the workflow and config are open
-> in all three repos; they wait for the App setup below.**
-> [`dry-run.yaml`](../templates/github/dry-run.yaml) ran green for all three repos from this repo (no secret, default
-> `GITHUB_TOKEN`, `RENOVATE_DRY_RUN=full`). The GitHub App does not exist yet and nothing was committed to the
-> scanned repos. Steps marked "owner" need the account owner.
+> **Status: decided on the central run (owner's choice, 2026-10-11).** The container path is verified on GitHub-hosted
+> runners. The central workflow is in this repo; draft PRs with only `renovate.json5` are open in the three repos.
+> What is left needs the owner: store `APP_PRIVATE_KEY` here and merge the config PRs.
 
 ## Before anything else: token scope
 
@@ -96,35 +94,31 @@ A personal account has no account-wide Actions secrets, so "install once, use ev
 somewhere is not possible; an organization secret would do it but means moving the repos into an org. Mend's hosted
 Renovate app is the "just install it" route, outside this pilot's container/CLI goal.
 
-## Steps
+## Steps (central run)
 
-1. **(owner) Create or choose the GitHub App** (settings above), not public, no webhook. Install it on
-   `jyje/cluster`, `jyje/pifanctl`, `jyje/mungchilog` only.
-2. **(owner) Per repo, add one variable and one secret**: variable `APP_CLIENT_ID` (the App's client id) and secret
-   `APP_PRIVATE_KEY` (the PEM). Put the key in via `gh secret set APP_PRIVATE_KEY --repo jyje/<repo> < key.pem` or
-   the web UI. It should not be pasted into chat or committed.
-3. Commit `templates/github/renovate.yaml` to `.github/workflows/` and the repo's file from `projects/<repo>/` to
-   the repo root as `renovate.json5`. Do it by pull request, not by direct push.
-4. Run the workflow by hand (`workflow_dispatch`, dry run `full`). Read the log for the same managers and branches
-   as in the local dry runs ([projects/](projects/)).
-5. Switch the dry run off (`dry-run: off`) once, check the first PRs and that their CI runs, then leave the
-   Sunday-night schedule on.
-6. Remove the overlapping Dependabot *version update* entries in `cluster` (`github-actions`) and `pifanctl`
-   (`pip`, `docker`, `github-actions`) in a separate PR. Keep Dependabot security alerts.
+1. **(owner, done)** `jyje-bot` is installed on `jyje/cluster`, `jyje/pifanctl`, `jyje/mungchilog`. GitHub offers no API to
+   confirm this for a private App; the first dry run does: token creation fails for a repo that is not installed.
+2. **(owner)** Check that `jyje-bot` has the permissions listed above (Issues, Workflows, Checks, Commit statuses
+   write; Dependabot alerts read). Anything missing shows up as a failed step or a warning in the dry run.
+3. **(owner)** Store the private key once, in this repo, from a terminal so it does not pass through chat:
+   `gh secret set APP_PRIVATE_KEY --repo jyje/pilot-scan-renovatebot < <key>.pem`
+4. Run the workflow `🤖 renovate` by hand with `dry-run: full`. Repos without a merged `renovate.json5` are skipped, so
+   the first useful run comes after step 5.
+5. **(owner)** Review and merge the config PRs below, one repo at a time. Then run the dry run again and read the log.
+6. Run once with `dry-run: off`, check the first PRs and that their CI runs, then leave the Sunday-night schedule on.
+7. Remove the overlapping Dependabot *version update* entries in `cluster` (`github-actions`) and `pifanctl`
+   (`pip`, `docker`, `github-actions`) in separate PRs. Keep Dependabot security alerts.
 
-## Draft PRs (opened 2026-10-11, not merged)
+## Config PRs (draft, not merged)
 
-Owner decision: reuse `jyje-bot`. The PRs only add `.github/workflows/renovate.y(a)ml` and `renovate.json5` and say in
-their description what must exist before merging.
+Each adds only `renovate.json5`. An earlier version of these PRs also carried a per-repo workflow; it was removed in a
+follow-up commit when the central run was chosen.
 
 | Repo | PR | Notes |
 |---|---|---|
-| mungchilog | [#112](https://github.com/jyje/mungchilog/pull/112) | base `dev`; workflow named `renovate.yml` and runner `ubuntu-26.04` to match the repo |
-| pifanctl | [#85](https://github.com/jyje/pifanctl/pull/85) | CI `Workflows` (actionlint) and `Version bump` pass, as predicted from `check_version_bump.py` |
+| mungchilog | [#112](https://github.com/jyje/mungchilog/pull/112) | base `dev` |
+| pifanctl | [#85](https://github.com/jyje/pifanctl/pull/85) | CI `Workflows` (actionlint) and `Version bump` passed on the first version, as predicted from `check_version_bump.py` |
 | cluster | [#166](https://github.com/jyje/cluster/pull/166) | `main` is protected |
-
-Still to do by the owner before merging: install `jyje-bot` on the three repos, check it has the permissions listed
-above, set the variable `APP_CLIENT_ID` and the secret `APP_PRIVATE_KEY` in each repo.
 
 Order of rollout: `mungchilog` (simplest, no Dependabot to remove) → `pifanctl` → `cluster`.
 

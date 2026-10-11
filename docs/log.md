@@ -97,8 +97,17 @@ Details per repo: [projects/](projects/).
 - `rm -rf` with a variable path was blocked by a safety check while preparing the clones; rewritten without the
   removal.
 
+### Switch to the central run
+
+- Owner asked whether the App id and key must be stored in every repo. Answer: installing an App does not remove the
+  need for the key; storing it once is possible by running Renovate from one place.
+- I built the central workflow before the owner had chosen. The owner pointed out that no real choice had been
+  offered; the decision (central run) was then made explicitly. Noted here so it is not repeated: ask first, and do not
+  start the option I prefer.
+- Removed the per-repo workflow from the three PR branches with a follow-up commit each, retitled the PRs
+  ("add Renovate config") and rewrote their descriptions. Central workflow: `.github/workflows/renovate.yaml`.
+
 ### Not done yet
 
-- Installing `jyje-bot` on the three repos, confirming its permissions, setting `APP_CLIENT_ID` and `APP_PRIVATE_KEY`
-  (owner only; see [02-github-action.md](02-github-action.md)), then merging the PRs and running the workflow once as a
-  dry run. The container path itself is already verified on hosted runners.
+- Storing `APP_PRIVATE_KEY` in this repo (owner, from a terminal), merging the three config PRs, and running the
+  central workflow as a dry run and then for real. The container path itself is already verified on hosted runners.
