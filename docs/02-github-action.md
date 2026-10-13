@@ -2,8 +2,8 @@
 
 > **Status: decided on the central run (owner's choice, 2026-10-11).** The container path is verified on GitHub-hosted
 > runners. The central workflow is in this repo; draft PRs with only `renovate.json5` are open in the three repos.
-> `jyje-bot` is installed on the three repos and the central dry run is green (61 s; every repo is skipped until its
-> config PR is merged). What is left needs the owner: merge the config PRs, one at a time.
+> `jyje-bot` is installed on the three repos and all three config PRs are merged; the central dry run (71 s) scans
+> all three. What is left: merge pifanctl#93, give `jyje-bot` Dependabot alerts: read, and watch the first scheduled run.
 
 ## Before anything else: token scope
 
@@ -111,15 +111,15 @@ Renovate app is the "just install it" route, outside this pilot's container/CLI 
 7. Remove the overlapping Dependabot *version update* entries in `cluster` (`github-actions`) and `pifanctl`
    (`pip`, `docker`, `github-actions`) in separate PRs. Keep Dependabot security alerts.
 
-## Config PRs (draft, not merged)
+## Config PRs
 
 Each adds only `renovate.json5`. An earlier version of these PRs also carried a per-repo workflow; it was removed in a
 follow-up commit when the central run was chosen.
 
 | Repo | PR | Notes |
 |---|---|---|
-| mungchilog | [#112](https://github.com/jyje/mungchilog/pull/112) | base `dev` |
-| pifanctl | [#85](https://github.com/jyje/pifanctl/pull/85) | CI `Workflows` (actionlint) and `Version bump` passed on the first version, as predicted from `check_version_bump.py` |
+| mungchilog | [#112](https://github.com/jyje/mungchilog/pull/112) | **merged 2026-10-14**, base `dev` |
+| pifanctl | [#85](https://github.com/jyje/pifanctl/pull/85) | **merged 2026-10-14**; follow-up [#93](https://github.com/jyje/pifanctl/pull/93) open (Python rule). CI `Workflows` (actionlint) and `Version bump` passed on the first version, as predicted from `check_version_bump.py` |
 | cluster | [#166](https://github.com/jyje/cluster/pull/166) | **merged 2026-10-12**; dashboard issue [#167](https://github.com/jyje/cluster/issues/167) created by the first real run |
 
 Order of rollout: `mungchilog` (simplest, no Dependabot to remove) → `pifanctl` → `cluster`.

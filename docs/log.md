@@ -139,7 +139,21 @@ Details per repo: [projects/](projects/).
   the **Dependabot alerts: read** permission. Owner action: App settings > Permissions & events > Repository
   permissions, then approve the permission update on the installation.
 
+### Config PRs merged, central dry run (2026-10-14, at the owner's request)
+
+- Merged pifanctl#85 (`c7bb893`) and mungchilog#112 (`5d73780`), both squash, only `renovate.json5` changed. Checked
+  first that the `paths` filters of the image build workflows do not match a root `renovate.json5`, so no image build
+  or deploy is triggered.
+- Central dry run (71 s): all three repos scanned with their own config, no errors. mungchilog 16 branches (13 gated by
+  approval), pifanctl 3 (1 gated), cluster 1 (gated).
+- New finding: pifanctl showed `renovate.python-3.x`, a Python 3.14 → 3.15 move of both Dockerfiles and
+  `.python-version`. Python 3.15 was released after my earlier scans. My rule only covered the workflow's
+  `python-version`. Extended it to `dockerfile` and `pyenv`, re-scanned (branch gone) and opened pifanctl#93. Not merged.
+- Still `Cannot access vulnerability alerts` on all three repos: the App needs Dependabot alerts: read.
+
 ### Not done yet
 
-- Merging the pifanctl and mungchilog config PRs (owner), then running the central workflow for real again.
-- `jyje-bot` needs Dependabot alerts: read (owner). The container path itself is already verified on hosted runners.
+- Merging pifanctl#93 (owner) before the Sunday-night schedule.
+- `jyje-bot` needs Dependabot alerts: read (owner).
+- First real run for pifanctl and mungchilog, and the first Renovate PR with CI. The Sunday-night schedule is the next
+  trigger.
