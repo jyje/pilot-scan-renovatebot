@@ -1,0 +1,46 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:recommended"],
+
+  timezone: "Asia/Seoul",
+  schedule: ["before 6am on monday"],
+  prConcurrentLimit: 3,
+
+  // jyje/skills git-commit-helper: bot commits are "🤖 ci(deps): <title>".
+  semanticCommits: "disabled",
+  commitMessagePrefix: "🤖 ci(deps):",
+
+  // projects/ holds copies of the three repos' configs, maintained by hand.
+  ignorePaths: ["projects/**", "out/**"],
+
+  // The templates are not under .github/workflows, so the github-actions manager
+  // would skip them; keep them on the same pins as the live workflows.
+  "github-actions": {
+    managerFilePatterns: ["/(^|/)\\.github/workflows/[^/]+\\.ya?ml$/", "/^templates/github/[^/]+\\.ya?ml$/"],
+  },
+
+  customManagers: [
+    {
+      // Default Renovate image in scripts/dry-run.sh. The renovate-version input in the
+      // workflows is already handled by the github-actions manager; matching it here too
+      // would make two managers edit the same string.
+      customType: "regex",
+      managerFilePatterns: ["/^scripts/dry-run\\.sh$/"],
+      matchStrings: ["ghcr\\.io/renovatebot/renovate:(?<currentValue>\\d+\\.\\d+\\.\\d+)"],
+      depNameTemplate: "ghcr.io/renovatebot/renovate",
+      datasourceTemplate: "docker",
+    },
+  ],
+
+  packageRules: [
+    {
+      matchUpdateTypes: ["major"],
+      dependencyDashboardApproval: true,
+    },
+    {
+      // One weekly PR for everything that runs Renovate itself.
+      matchUpdateTypes: ["minor", "patch", "digest", "pinDigest"],
+      groupName: "renovate runtime",
+    },
+  ],
+}
