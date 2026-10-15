@@ -54,6 +54,7 @@ What matters most per repo:
 | [GitHub Actions](docs/02-github-action.md) | App, secrets, workflow, rollout order |
 | [GitLab](docs/03-gitlab.md) | What worked and what did not |
 | [Skills analysis](docs/skills-analysis.md) | Which of [jyje/skills](https://github.com/jyje/skills) apply |
+| [Recommendations](docs/recommendations.md) | What to do next, per repo and overall |
 | [Experiment log](docs/log.md) | Dated findings, including wrong guesses |
 
 ## Try it

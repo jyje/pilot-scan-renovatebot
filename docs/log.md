@@ -157,6 +157,14 @@ Details per repo: [projects/](projects/).
   configs' `before 6am on monday` window, so it could not open PRs. Moved the cron to Sunday 16:00 UTC (Monday
   01:00 KST) in the central workflow and both templates. The repo configs stay as they are.
 
+### Recommendations and GitLab cleanup (2026-10-15)
+
+- Wrote [recommendations.md](recommendations.md).
+- GitLab sandbox: closed MRs `!1`, `!2` and dashboards `#1`, `#2`, revoked the `renovate` token, archived the
+  project. Not deleted: irreversible, left to the owner.
+- The two dashboards had different authors: each project access token is its own bot user, and Renovate finds its
+  dashboard by author.
+
 ### Not done yet
 
 - Merging pifanctl#93 (owner) before the Sunday-night schedule.

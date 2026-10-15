@@ -45,7 +45,13 @@ not recorded here. One scan of this small project used about 1 minute.
 | Release notes in PRs | works | needs a `GITHUB_COM_TOKEN` for notes of GitHub-hosted dependencies; without it Renovate logs "Skipping release notes retrieval" and goes on |
 | Reading config | `renovate.json5` in the repo | same file, same options |
 
-## Cleanup
+## Cleanup (done 2026-10-15)
 
-The two local access tokens used for the tests expire on 2026-10-12. The CI variable token (`renovate`) expires on
-2026-12-31. Revoke from the project's Settings > Access tokens if the sandbox is no longer needed.
+MRs `!1`, `!2` and both Dependency Dashboard issues were closed, the `renovate` project token was revoked (the two
+local test tokens had already expired on 2026-10-12), and the project was **archived** (read-only, reversible).
+Deleting it is irreversible and left to the owner: `glab repo delete jyje/pilot-renovate-sample`.
+
+One more finding from the cleanup: the project had **two** Dependency Dashboard issues, created by two different bot
+users (`project_..._bot_844...` from the local-container token, `project_..._bot_dde...` from the CI token). Each
+project access token has its own bot user, and Renovate looks for its dashboard by author, so switching tokens
+creates a second dashboard. Keep one token per project, or close the old dashboard after switching.

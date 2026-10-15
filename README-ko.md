@@ -54,6 +54,7 @@ gitlab.com에서의 같은 구성을 담았습니다.
 | [GitHub Actions](docs/02-github-action.md) | App, secret, 워크플로, 적용 순서 |
 | [GitLab](docs/03-gitlab.md) | 되는 것과 안 되는 것 |
 | [스킬 분석](docs/skills-analysis.md) | [jyje/skills](https://github.com/jyje/skills) 중 적용 대상 |
+| [권장사항](docs/recommendations.md) | 다음에 할 일, 레포별과 전체 |
 | [실험 로그](docs/log.md) | 틀린 추측까지 포함한 날짜별 기록 |
 
 ## 실행해 보기
