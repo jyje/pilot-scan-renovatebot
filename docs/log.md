@@ -165,9 +165,23 @@ Details per repo: [projects/](projects/).
 - The two dashboards had different authors: each project access token is its own bot user, and Renovate finds its
   dashboard by author.
 
+### "Do everything needed" (2026-10-16)
+
+- Merged pifanctl#93 (`e49de47`).
+- Checked the `jyje-bot` installation on this repo first (a missing installation on any listed repo fails the whole
+  token), then added this repo to the central run with its own `renovate.json5`. First version also matched the
+  `renovate-version` input with a regex, but the `github-actions` manager already reads it, so the regex was limited
+  to `scripts/dry-run.sh`. Central dry run with four repos: green in 118 s.
+- Dependabot history: cluster `helm` 16 PRs (2026-02-28 to 03-14, none merged, none since June), pifanctl `pip` and
+  `github_actions` 2 each with #94 open (duplicates Renovate's `python` group), mungchilog only security PRs.
+  Security updates are enabled on all three. Opened cluster#168 and pifanctl#96 to remove the overlapping
+  version-update entries; not merged, to be merged after Monday's run.
+- Corrected my recommendation about a Node LTS rule for mungchilog: not needed, `config:recommended` already picks
+  `node-24.x`.
+
 ### Not done yet
 
-- Merging pifanctl#93 (owner) before the Sunday-night schedule.
 - `jyje-bot` needs Dependabot alerts: read (owner).
+- Merge cluster#168 and pifanctl#96 (Dependabot cleanup) after Monday's run, then close Dependabot's pifanctl#94.
 - First real run for pifanctl and mungchilog, and the first Renovate PR with CI. The Sunday-night schedule is the next
   trigger.
