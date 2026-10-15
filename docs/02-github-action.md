@@ -147,7 +147,9 @@ App token does. A fine-grained PAT would also work but is tied to the owner's ac
 - Manual runs default to a dry run; scheduled runs create PRs.
 - `RENOVATE_REQUIRE_CONFIG: required` and `RENOVATE_ONBOARDING: false`: the config is committed on purpose, no
   onboarding PR.
-- The cron is Sunday 20:00 UTC = Monday 05:00 KST, inside the `before 6am on monday` window of the configs. A run
+- The cron is Sunday 16:00 UTC = Monday 01:00 KST, inside the `before 6am on monday` window of the configs. It was
+  20:00 UTC (05:00 KST) at first, but the scheduled run of 2026-10-11 started at 23:33 UTC (08:33 KST), outside the
+  window, so it was moved 4 hours earlier. A run
   outside the window only handles vulnerability fixes.
 - Renovate keeps the actions in the repo up to date too, so this workflow's own pins will show up in the first PRs.
 

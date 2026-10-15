@@ -151,6 +151,12 @@ Details per repo: [projects/](projects/).
   `python-version`. Extended it to `dockerfile` and `pyenv`, re-scanned (branch gone) and opened pifanctl#93. Not merged.
 - Still `Cannot access vulnerability alerts` on all three repos: the App needs Dependabot alerts: read.
 
+### Schedule moved earlier (2026-10-15, owner chose option A)
+
+- The scheduled run of 2026-10-11 was due at 20:00 UTC but started at 23:33 UTC (Monday 08:33 KST), outside the
+  configs' `before 6am on monday` window, so it could not open PRs. Moved the cron to Sunday 16:00 UTC (Monday
+  01:00 KST) in the central workflow and both templates. The repo configs stay as they are.
+
 ### Not done yet
 
 - Merging pifanctl#93 (owner) before the Sunday-night schedule.

@@ -18,7 +18,9 @@ on:
         options: ["full", "lookup", "off"]
         default: "full"
   schedule:
-    - cron: "0 20 * * 0" # Sundays 20:00 UTC (Monday 05:00 KST), inside the configs' "before 6am on monday"
+    # Sundays 16:00 UTC = Monday 01:00 KST. Scheduled runs can start hours late (one started 3.5 h late), and
+    # the configs only open PRs "before 6am on monday" (KST), so start early enough to stay inside that window.
+    - cron: "0 16 * * 0"
 
 permissions:
   contents: read
