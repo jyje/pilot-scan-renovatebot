@@ -43,7 +43,7 @@ What matters most per repo:
 | Workflow template (lint-clean with actionlint) | Done |
 | GitLab: sandbox project, CI job on shared runners, MRs created by Renovate | Done |
 | GitHub: container run on hosted runners (dry run, all three repos) | Done |
-| GitHub: central workflow in this repo, config PRs in the three repos | `jyje-bot` installed, all three config PRs merged ([#112](https://github.com/jyje/mungchilog/pull/112), [#85](https://github.com/jyje/pifanctl/pull/85), [#166](https://github.com/jyje/cluster/pull/166)), follow-up [pifanctl#93](https://github.com/jyje/pifanctl/pull/93) merged; central dry run scans all three plus this repo; Dependabot cleanup PRs [cluster#168](https://github.com/jyje/cluster/pull/168), [pifanctl#96](https://github.com/jyje/pifanctl/pull/96) open |
+| GitHub: central workflow in this repo, config PRs in the three repos | `jyje-bot` installed, all three config PRs merged ([#112](https://github.com/jyje/mungchilog/pull/112), [#85](https://github.com/jyje/pifanctl/pull/85), [#166](https://github.com/jyje/cluster/pull/166)), follow-up [pifanctl#93](https://github.com/jyje/pifanctl/pull/93) merged; central dry run scans all three plus this repo; Dependabot kept next to Renovate by choice ([pifanctl#101](https://github.com/jyje/pifanctl/pull/101) restores it there) |
 
 ## Documents
 

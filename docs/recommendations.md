@@ -1,20 +1,20 @@
 # Recommendations
 
 What to do next, after the rollout of 2026-10-11 to 2026-10-15. Each item says why, based on what the runs showed.
-Status as of 2026-10-16. Items marked **done** were carried out; the rest need the owner or a later date.
+Status as of 2026-10-18. Items marked **done** were carried out; the rest need the owner or a later date.
 
 ## Before the next scheduled run (Sunday 16:00 UTC, Monday 01:00 KST)
 
 | Item | Who | Why |
 |---|---|---|
 | **Done 2026-10-16**: merged [pifanctl#93](https://github.com/jyje/pifanctl/pull/93) (`e49de47`); the central dry run no longer shows `renovate/python-3.x` | | Without it the run opens a Python 3.14 → 3.15 PR for both Dockerfiles and `.python-version`, while CI stays on 3.14 |
-| Give `jyje-bot` **Dependabot alerts: read** | owner | Every run logs `Cannot access vulnerability alerts`; alerts are enabled on all three repos, so vulnerability-fix PRs (which ignore the schedule) are off until the App can read them |
+| Give `jyje-bot` **Dependabot alerts: read** | owner | Every run logs `Cannot access vulnerability alerts`. The owner chose to keep Renovate's vulnerability PRs on next to Dependabot security updates (2026-10-18), so the App needs this permission; expect security fixes to get a PR from both tools |
 
 ## After the first real PRs
 
 | Item | Why |
 |---|---|
-| Remove Dependabot *version updates* that overlap | **PRs open, merge after Monday's run**: [cluster#168](https://github.com/jyje/cluster/pull/168) drops `github-actions`; [pifanctl#96](https://github.com/jyje/pifanctl/pull/96) removes `dependabot.yaml` (every entry is covered). Dependabot security updates are a repo setting and stay enabled on all three repos. Dependabot's open [pifanctl#94](https://github.com/jyje/pifanctl/pull/94) duplicates Renovate's `python` group; close it after #96. cluster's `helm` entry opened 16 PRs between 2026-02-28 and 2026-03-14, none merged, and none since the layout change in June; it does not overlap with Renovate and is left alone |
+| **Decided 2026-10-18: keep Dependabot and Renovate side by side** | The owner chose to run both on the same ecosystems (option A) rather than split them. The same update can get one PR from each tool; merging either updates the dependency and the other tool closes its PR on its next run. The removal PR cluster#168 was closed. pifanctl#96 had already been merged on 2026-10-16, so [pifanctl#101](https://github.com/jyje/pifanctl/pull/101) restores `dependabot.yaml`. Rejected alternative: split by ecosystem (no duplicates, but Renovate would cover much less) |
 | **Done 2026-10-16**: this repo is in the scan | `jyje-bot` is installed here (checked first, since one missing installation would fail the token for all repos). `renovate.json5` covers the workflows, the templates (extra `managerFilePatterns`), `.gitlab-ci.yml` and the image in `scripts/dry-run.sh` (regex). The `renovate-version` input is already read by the `github-actions` manager, so the regex is limited to the script to avoid two managers editing one string. Dry run: one `renovate runtime` group PR (Renovate 44.149.2 → 44.164.6, action pins) and the runner 26.04 bump gated |
 | Make failures visible | One central run serves three repos, so one failure stops all of them. GitHub mails scheduled-workflow failures to the person who last changed the cron; confirm that mail arrives, or check the run summary weekly |
 

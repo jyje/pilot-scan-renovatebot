@@ -43,7 +43,7 @@ gitlab.com에서의 같은 구성을 담았습니다.
 | 워크플로 템플릿 (actionlint 통과) | 완료 |
 | GitLab: 샘플 프로젝트, 공용 러너 CI 잡, Renovate가 만든 MR | 완료 |
 | GitHub: 호스티드 러너에서 컨테이너 실행 (세 레포 드라이런) | 완료 |
-| GitHub: 이 레포의 중앙 워크플로, 세 레포의 설정 PR | `jyje-bot` 설치됨, 설정 PR 세 개 모두 머지 ([#112](https://github.com/jyje/mungchilog/pull/112), [#85](https://github.com/jyje/pifanctl/pull/85), [#166](https://github.com/jyje/cluster/pull/166)), 후속 [pifanctl#93](https://github.com/jyje/pifanctl/pull/93) 머지. 중앙 드라이런이 세 레포와 이 레포를 스캔. Dependabot 정리 PR [cluster#168](https://github.com/jyje/cluster/pull/168), [pifanctl#96](https://github.com/jyje/pifanctl/pull/96) 열림 |
+| GitHub: 이 레포의 중앙 워크플로, 세 레포의 설정 PR | `jyje-bot` 설치됨, 설정 PR 세 개 모두 머지 ([#112](https://github.com/jyje/mungchilog/pull/112), [#85](https://github.com/jyje/pifanctl/pull/85), [#166](https://github.com/jyje/cluster/pull/166)), 후속 [pifanctl#93](https://github.com/jyje/pifanctl/pull/93) 머지. 중앙 드라이런이 세 레포와 이 레포를 스캔. Dependabot은 Renovate와 함께 유지하기로 결정 (pifanctl은 [#101](https://github.com/jyje/pifanctl/pull/101)로 복원) |
 
 ## 문서
 

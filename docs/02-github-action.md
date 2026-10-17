@@ -108,8 +108,8 @@ Renovate app is the "just install it" route, outside this pilot's container/CLI 
    the first useful run comes after step 5.
 5. **(owner)** Review and merge the config PRs below, one repo at a time. Then run the dry run again and read the log.
 6. Run once with `dry-run: off`, check the first PRs and that their CI runs, then leave the Sunday-night schedule on.
-7. Remove the overlapping Dependabot *version update* entries in `cluster` (`github-actions`) and `pifanctl`
-   (`pip`, `docker`, `github-actions`) in separate PRs. Keep Dependabot security alerts.
+7. Dependabot stays. On 2026-10-18 the owner chose to keep Dependabot version and security updates next to Renovate on
+   the same ecosystems, accepting duplicate PRs (merging one closes the other on its next run).
 
 ## Config PRs
 

@@ -179,9 +179,19 @@ Details per repo: [projects/](projects/).
 - Corrected my recommendation about a Node LTS rule for mungchilog: not needed, `config:recommended` already picks
   `node-24.x`.
 
+### PR language, and Dependabot stays (2026-10-18)
+
+- The owner pointed out that cluster#168 was written in Korean; every PR in these repos is in English. Rewrote the
+  descriptions of cluster#168, cluster#166, pifanctl#93 and mungchilog#112 in English (the merged ones: description
+  only).
+- The owner wants Dependabot and Renovate both. Options offered: A, run both on the same ecosystems (duplicates that
+  resolve themselves), or B, split by ecosystem. Chosen: **A**, with Renovate's vulnerability PRs kept on as well.
+- Closed cluster#168. pifanctl#96 had already been merged by the owner on 2026-10-16 (`2996b42`), so opened
+  pifanctl#101 to revert it.
+
 ### Not done yet
 
 - `jyje-bot` needs Dependabot alerts: read (owner).
-- Merge cluster#168 and pifanctl#96 (Dependabot cleanup) after Monday's run, then close Dependabot's pifanctl#94.
+- Merge pifanctl#101 (restores `dependabot.yaml`).
 - First real run for pifanctl and mungchilog, and the first Renovate PR with CI. The Sunday-night schedule is the next
   trigger.
