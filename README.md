@@ -36,6 +36,9 @@ What matters most per repo:
 
 ## Status
 
+The scheduled workflow targets `jyje/cluster`. See the [operations guide](docs/02-github-action.md#cluster-operations)
+for the current runner and App permission checks. The table records the original pilot.
+
 | Part | State |
 |---|---|
 | Local container dry runs of all three repos | Done |

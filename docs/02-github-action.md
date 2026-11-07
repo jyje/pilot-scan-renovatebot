@@ -1,9 +1,24 @@
 # GitHub Actions
 
-> **Status: decided on the central run (owner's choice, 2026-10-11).** The container path is verified on GitHub-hosted
-> runners. The central workflow is in this repo; draft PRs with only `renovate.json5` are open in the three repos.
-> `jyje-bot` is installed on the three repos and all three config PRs are merged; the central dry run (71 s) scans
-> all three. What is left: merge pifanctl#93, give `jyje-bot` Dependabot alerts: read, and watch the first scheduled run.
+## Cluster operations
+
+The [central workflow](../.github/workflows/renovate.yaml) runs Renovate for `jyje/cluster` with a `jyje-bot`
+installation token scoped to that repository. This pilot holds the runner and `APP_PRIVATE_KEY` secret.
+Keep repository policy and chart vendoring code in `jyje/cluster`, alongside the charts and Argo CD Applications.
+
+1. In `jyje/cluster`, verify that Dependency graph and Dependabot alerts are enabled. Run
+   [Check app install](../.github/workflows/check-app-install.yaml) in this pilot. It tests the alerts endpoint
+   with the same App token scope and discards the response body. If access fails, check the App's
+   **Dependabot alerts: read** permission and whether the installation has accepted it.
+2. Run **renovate** manually with `dry-run: full`. Check that the log covers only `jyje/cluster` and has no
+   vulnerability access warning. The run uploads its JSONL log for seven days.
+3. The scheduled runner checks daily at 01:00 KST. `cluster/renovate.json5` limits regular PR creation to
+   Monday before 06:00 KST. Security fixes can open on any run when GitHub reports a matching alert with a fix.
+   Approve major updates and Ubuntu runner changes in the Dependency Dashboard before PR creation.
+
+## Historical multi-repository pilot
+
+The sections below describe the original rollout, dry-run experiments, and example templates.
 
 ## Before anything else: token scope
 
