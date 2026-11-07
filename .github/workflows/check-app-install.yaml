@@ -1,6 +1,9 @@
 name: 🔑 check app install
 
-# Read-only check using the same repository-scoped App token as Renovate.
+# Tries to mint a jyje-bot token for each target repo on its own and reports which ones fail.
+# "Not Found" from create-github-app-token means the App is not installed on that repo.
+# claude-docker is the control: the App is known to be installed there.
+# Writes nothing anywhere.
 
 on:
   workflow_dispatch:
@@ -11,6 +14,10 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        repo: [claude-docker, pifanctl, mungchilog, pilot-scan-renovatebot]
     steps:
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
@@ -18,17 +25,11 @@ jobs:
           client-id: Iv23liPUAdp1yJeUO57X # jyje-bot
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           owner: jyje
-          repositories: cluster
+          repositories: ${{ matrix.repo }}
+          permission-metadata: read
 
       - name: Show what the token can reach
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          gh api repos/jyje/cluster --jq '"installed and reachable: \(.full_name) (default branch \(.default_branch))"'
-
-      - name: Check Dependabot alerts access
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          gh api --silent 'repos/jyje/cluster/dependabot/alerts?per_page=1'
-          echo 'Dependabot alerts API is accessible to jyje-bot.'
+          gh api "repos/jyje/${{ matrix.repo }}" --jq '"installed and reachable: \(.full_name) (default branch \(.default_branch))"'

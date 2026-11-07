@@ -1,9 +1,12 @@
 name: 🤖 renovate
 
-# Central self-hosted Renovate for jyje/cluster.
+# Central self-hosted Renovate: one workflow, one secret, two repositories plus this one
+# (so Renovate also keeps its own action pins and image version current).
 #
-# This workflow uses the jyje-bot installation token scoped to cluster.
-# Update policy is read from cluster's renovate.json5.
+# The jyje-bot GitHub App is installed on the target repos. This workflow signs in as the App
+# with its private key (stored once, in this repo) and asks for a token limited to those repos.
+# Each repo only needs its own renovate.json5; a repo without one is skipped
+# (RENOVATE_REQUIRE_CONFIG=required), so a repo joins the run when its config PR is merged.
 #
 # Needed here: secret APP_PRIVATE_KEY (PEM). The client id is not a secret.
 
@@ -16,8 +19,9 @@ on:
         options: ["full", "lookup", "off"]
         default: "full"
   schedule:
-    # 01:00 KST daily for security fixes. Cluster's policy limits regular PR creation to Monday morning.
-    - cron: "0 16 * * *"
+    # Sundays 16:00 UTC = Monday 01:00 KST. Scheduled runs can start hours late (one started 3.5 h late), and
+    # the configs only open PRs "before 6am on monday" (KST), so start early enough to stay inside that window.
+    - cron: "0 16 * * 0"
 
 permissions:
   contents: read
@@ -40,7 +44,10 @@ jobs:
           client-id: Iv23liPUAdp1yJeUO57X # jyje-bot, same value as claude-docker's APP_CLIENT_ID
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           owner: jyje
-          repositories: cluster
+          repositories: |
+            pifanctl
+            mungchilog
+            pilot-scan-renovatebot
 
       - uses: renovatebot/github-action@230ce922b08968d0a4f6f70f295601daff09ef1d # v46.3.7
         with:
@@ -52,7 +59,7 @@ jobs:
           docker-volumes: |
             /tmp/renovate-out:/renovate-out
         env:
-          RENOVATE_REPOSITORIES: jyje/cluster
+          RENOVATE_REPOSITORIES: jyje/pifanctl,jyje/mungchilog,jyje/pilot-scan-renovatebot
           # Scheduled runs create PRs; manual runs default to a dry run.
           RENOVATE_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run != 'off' && inputs.dry-run || '' }}
           RENOVATE_ONBOARDING: "false"
@@ -67,12 +74,9 @@ jobs:
           {
             echo "### Renovate run (dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run || 'off' }})"
             echo
-            if [[ -s /tmp/renovate-out/renovate-log.jsonl ]]; then
-              count=$(jq -s '[.[] | select(.repository == "jyje/cluster" and ((.msg // "") | startswith("branchExists="))) | .branch] | unique | length' /tmp/renovate-out/renovate-log.jsonl)
-              echo "- jyje/cluster: $count branches considered"
-            else
-              echo "- jyje/cluster: Renovate produced no log"
-            fi
+            for r in pifanctl mungchilog pilot-scan-renovatebot; do
+              echo "- jyje/$r: $(jq -r --arg r "jyje/$r" 'select(.repository==$r and (.msg|test("^branchExists="))) | .branch' /tmp/renovate-out/renovate-log.jsonl 2>/dev/null | sort -u | wc -l) branches considered"
+            done
           } >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
