@@ -1,6 +1,6 @@
 name: 🤖 renovate
 
-# Central self-hosted Renovate: one workflow, one secret, three repositories plus this one
+# Central self-hosted Renovate: one workflow, one secret, two repositories plus this one
 # (so Renovate also keeps its own action pins and image version current).
 #
 # The jyje-bot GitHub App is installed on the target repos. This workflow signs in as the App
@@ -45,7 +45,6 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           owner: jyje
           repositories: |
-            cluster
             pifanctl
             mungchilog
             pilot-scan-renovatebot
@@ -60,7 +59,7 @@ jobs:
           docker-volumes: |
             /tmp/renovate-out:/renovate-out
         env:
-          RENOVATE_REPOSITORIES: jyje/cluster,jyje/pifanctl,jyje/mungchilog,jyje/pilot-scan-renovatebot
+          RENOVATE_REPOSITORIES: jyje/pifanctl,jyje/mungchilog,jyje/pilot-scan-renovatebot
           # Scheduled runs create PRs; manual runs default to a dry run.
           RENOVATE_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run != 'off' && inputs.dry-run || '' }}
           RENOVATE_ONBOARDING: "false"
@@ -75,7 +74,7 @@ jobs:
           {
             echo "### Renovate run (dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run || 'off' }})"
             echo
-            for r in cluster pifanctl mungchilog pilot-scan-renovatebot; do
+            for r in pifanctl mungchilog pilot-scan-renovatebot; do
               echo "- jyje/$r: $(jq -r --arg r "jyje/$r" 'select(.repository==$r and (.msg|test("^branchExists="))) | .branch' /tmp/renovate-out/renovate-log.jsonl 2>/dev/null | sort -u | wc -l) branches considered"
             done
           } >> "$GITHUB_STEP_SUMMARY"
